@@ -17,9 +17,9 @@ const app = express();
 // Middleware base
 app.use(cors({
   origin: [
-    "http://localhost:3000",
-    "https://TU-FRONTEND-PUBLICO.vercel.app",
-    "https://TU-FRONTEND-ADMIN.vercel.app"
+    "http://localhost:3000", // para desarrollo local
+    "https://desayunos-dulce-lucesita.vercel.app",
+    "https://dulce-lucesita-admin.vercel.app"
   ],
   credentials: true
 }));
@@ -27,7 +27,18 @@ app.use(express.json());
 app.use(morgan('dev'));
 
 // Conexión base de datos y modelos
-connectDB().then(initModels);
+connectDB()
+  .then(() => {
+    initModels();
+    return require('./config/database').sequelize.sync({ alter: true });
+  })
+  .then(() => {
+    console.log("📦 Tablas sincronizadas correctamente");
+  })
+  .catch((error) => {
+    console.error("❌ Error inicializando la app:", error);
+  });
+
 
 // Rutas
 app.use('/api/auth', require('./routes/authRoutes'));
