@@ -15,7 +15,14 @@ dotenv.config();
 const app = express();
 
 // Middleware base
-app.use(cors());
+app.use(cors({
+  origin: [
+    "http://localhost:3000",
+    "https://TU-FRONTEND-PUBLICO.vercel.app",
+    "https://TU-FRONTEND-ADMIN.vercel.app"
+  ],
+  credentials: true
+}));
 app.use(express.json());
 app.use(morgan('dev'));
 
