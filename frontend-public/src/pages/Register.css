@@ -1,0 +1,119 @@
+/* Estructura base del documento */
+html, body {
+  margin: 0;  /* Elimina márgenes por defecto */
+  padding: 0; /* Elimina relleno por defecto */
+  min-height: 100%; /* Asegura que el body ocupe al menos el 100% de la altura de la ventana */
+  font-family: 'Segoe UI', sans-serif;  /* Fuente base */
+  background-color: #fff8f2;  /* Color de fondo suave */
+}
+
+/* Contenedor principal centrado */
+.register-container {
+  min-height: calc(85vh - 80px); /* Asegura espacio para footer si existe */
+  display: flex; /* Usa flexbox para centrar contenido */
+  justify-content: center; /* Centra horizontalmente */
+  align-items: center; /* Centra verticalmente */
+  padding: 1rem; /* Espacio alrededor del contenido */
+  box-sizing: border-box; /* Incluye padding y border en el ancho total */
+  margin-bottom: 0; /* Espacio inferior para evitar que el contenido se pegue al borde */
+  margin-top: 0; /* Espacio superior para evitar que el contenido se pegue al borde */
+}
+
+/* Caja del formulario */
+.register-box {
+  background-color: #ffeef6;
+  padding: 2rem;
+  border-radius: 20px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  max-width: 400px;
+  width: 100%;
+  text-align: center;
+  color: #b8336a;
+  transition: all 0.3s ease;
+}
+
+/* Título */
+.register-box h2 {
+  margin-bottom: 1.5rem;
+  font-size: 1.8rem;
+}
+
+/* Formulario */
+.register-box form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+/* Campos de entrada */
+.register-box input {
+  padding: 0.75rem;
+  border: 1px solid #d94f8c;
+  border-radius: 10px;
+  background-color: #fff;
+  color: #4b2e2e;
+  font-size: 1rem;
+  transition: border-color 0.3s;
+}
+
+.register-box input:focus {
+  outline: none;
+  border-color: #b8336a;
+}
+
+/* Botón */
+.register-box button {
+  padding: 0.8rem;
+  background-color: #d94f8c;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-weight: bold;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.register-box button:hover {
+  background-color: #b8336a;
+}
+
+/* Mensaje de error */
+.error-message {
+  color: red;
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+}
+
+/* Responsive para pantallas más pequeñas */
+@media (max-width: 480px) {
+  .register-box {
+    padding: 1.5rem;
+    max-width: 95%;
+  }
+
+  .register-box h2 {
+    font-size: 1.5rem;
+  }
+
+  .register-box input,
+  .register-box button {
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 350px) {
+  .register-box {
+    padding: 1rem;
+  }
+
+  .register-box h2 {
+    font-size: 1.3rem;
+  }
+
+  .register-box input,
+  .register-box button {
+    font-size: 0.9rem;
+    padding: 0.65rem;
+  }
+}

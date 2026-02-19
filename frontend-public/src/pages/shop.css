@@ -1,0 +1,150 @@
+/* Shop.css */
+.shop {
+  padding: 2rem;
+  background-color: #fff8f2;
+  color: #4b2e2e;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+h2 {
+  font-size: 2.2rem;
+  text-align: center;
+  margin-bottom: 2rem;
+  color: #b8336a;
+}
+
+.category-selector {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 2rem;
+  gap: 1rem;
+}
+
+.category-selector select {
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  border: 1px solid #d94f8c;
+  background-color: #ffeef6;
+  color: #4b2e2e;
+  font-size: 1rem;
+}
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1.5rem;
+  padding: 2rem;
+}
+
+.product-card {
+  background-color: #fff8f2;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+}
+
+.product-card img {
+  width: 100%;
+  height: auto; /* permite que la imagen crezca según su proporción */
+  object-fit: contain; /* mantiene toda la imagen visible sin recortarla */
+  max-height: 250px; /* límite para que no sea muy grande */
+  margin-bottom: 1rem;
+}
+
+.product-card h3 {
+  margin: 1rem 0 0.5rem;
+  font-size: 1.2rem;
+  color: #4b2e2e;
+  text-align: center;
+}
+
+.product-card p {
+  margin: 0 0 1rem;
+  color: #b8336a;
+  font-weight: bold;
+  text-align: center;
+}
+
+.product-card a {
+  margin-top: auto;
+  padding: 0.5rem 1rem;
+  background-color: #b8336a;
+  color: #fff;
+  text-align: center;
+  text-decoration: none;
+  border-radius: 8px;
+  transition: background-color 0.3s ease;
+}
+
+.product-card a:hover {
+  background-color: #a0295c;
+}
+.view-button {
+  margin-top: 8px;
+  padding: 6px 12px;
+  background-color: #6c63ff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s;
+}
+
+.view-button:hover {
+  background-color: #554bd4;
+}
+@media (max-width: 768px) {
+  .shop {
+    padding: 1rem;
+  }
+
+  .category-selector {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+    text-align: center;
+  }
+
+  .category-selector select {
+    width: 100%;
+    font-size: 1rem;
+  }
+
+  .product-grid {
+    padding: 1rem;
+    grid-template-columns: 1fr;
+  }
+
+  .product-card {
+    max-width: 100%;
+  }
+
+  .product-card img {
+    max-height: 180px;
+  }
+
+  .product-card h3 {
+    font-size: 1.1rem;
+  }
+
+  .product-card p {
+    font-size: 1rem;
+  }
+
+  .view-button {
+    width: 90%;
+    margin: 0 auto 1rem;
+    display: block;
+  }
+}

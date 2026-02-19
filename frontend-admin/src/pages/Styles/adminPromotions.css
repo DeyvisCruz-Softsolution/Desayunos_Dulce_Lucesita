@@ -1,0 +1,109 @@
+.admin-promotions-container {
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background-color: #fff8f9;
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(255, 192, 203, 0.3);
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.admin-promotions-container h2 {
+  text-align: center;
+  font-size: 2rem;
+  color: #cc3366;
+  margin-bottom: 1.5rem;
+}
+
+.promotion-form {
+  background-color: #fff;
+  border: 1px solid #f3c2cb;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 2px 8px rgba(204, 51, 102, 0.05);
+}
+
+.promotion-form input,
+.promotion-form textarea {
+  width: 100%;
+  padding: 0.8rem;
+  margin-bottom: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border-color 0.2s ease-in-out;
+}
+
+.promotion-form input:focus,
+.promotion-form textarea:focus {
+  border-color: #cc3366;
+  outline: none;
+}
+
+.promotion-form button {
+  background-color: #cc3366;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.promotion-form button:hover {
+  background-color: #b12c59;
+}
+
+.promotion-form .error {
+  color: #e74c3c;
+  margin-top: 0.5rem;
+}
+
+.promotion-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+.promotion-media {
+  width: 200px;
+  height: auto;
+  border-radius: 10px;
+  object-fit: cover;
+  border: 1px solid #e1c5d1;
+}
+.promotion-card {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  background: #fff7f9;
+  border: 1px solid #f3cfe2;
+  border-radius: 12px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+}
+.promotion-details {
+  flex: 1;
+}
+.promotion-actions button {
+  margin-right: 8px;
+  padding: 6px 12px;
+  background-color: #f9d3e3;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.promotion-actions button:hover {
+  background-color: #fbb6ce;
+}
+
+.delete-button {
+  background-color: #ffc1c1;
+}
+
+.delete-button:hover {
+  background-color: #ff9393;
+}

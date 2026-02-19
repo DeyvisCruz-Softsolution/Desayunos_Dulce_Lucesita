@@ -1,0 +1,24 @@
+retirado de producto modal, era el boton de pedido rapido
+
+esto va en la parte de arriba
+            const handleOrder = async () => {
+    try {
+      setLoading(true);
+      await createOrder(product.id, 1);
+      setMessage('✅ Pedido realizado con éxito.');
+    } catch (error) {
+      console.error('❌ Error al realizar pedido:', error);
+      setMessage('❌ Error al realizar el pedido.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+
+esto va en la parte de abajo
+<button className="order-button" onClick={handleOrder} disabled={loading}>
+            {loading ? 'Procesando...' : 'Pedido rápido'}
+          </button>
+
+otros
+

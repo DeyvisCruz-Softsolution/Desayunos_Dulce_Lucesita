@@ -1,0 +1,106 @@
+body {
+  font-family: 'Poppins', sans-serif;
+
+}
+/* Contenedor principal */
+.about-container {
+  display: flex; /* Disposición flexible */
+  flex-direction: column; /* Disposición vertical */
+  align-items: center; /* Centrado horizontal */
+  padding: 40px; /* Espacio alrededor del contenido */
+  background: #fff; /* Fondo limpio */
+  font-family: 'Poppins', sans-serif;
+  color: #333; /* Color de texto */
+}
+
+/* Logo antes de las cards */
+.logo-container {
+  margin-bottom: 2px; /* Espacio entre el logo y las cards */
+  margin-top: 5px; /* Espacio entre el logo y el borde superior */
+}
+
+.logo-image {
+  width: 150px; /* Tamaño inicial */
+  height: auto;
+  transition: transform 0.3s ease-in-out;
+}
+
+.logo-image:hover {
+  transform: scale(1.1); /* Efecto de crecimiento al pasar el mouse */
+}
+
+/* Título */
+.about-title {
+  font-size: 2.5rem;
+  color: #733f4b;
+  margin-bottom: 20px; /* Espacio debajo del título */
+  margin-top: 20px; /* Espacio encima del título */
+  font-family: 'Pinyon Script', cursive;
+}
+
+/* Contenedor de cards horizontal */
+.about-cards {
+  display: flex; /* Disposición horizontal */
+  justify-content: center; /* Centrado horizontal */
+  gap: 20px; /* Espacio entre las cards */
+  flex-wrap: wrap; /* Permite ajuste en pantallas pequeñas */
+  max-width: 100%; /* Ancho máximo para evitar desbordamiento */
+  left: 5px; /* Espacio desde el borde izquierdo */
+  right: 5px; /* Espacio desde el borde derecho */
+}
+
+/* Cards flotantes */
+.about-card {
+  background: rgba(255, 255, 255, 0.9); /* Fondo semitransparente */
+  padding: 20px; /* Espacio interno */
+  width: 250px; /* Ancho fijo para las cards */ 
+  border-radius: 15px; /* Bordes redondeados */
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); /* Sombra sutil */
+  transition: transform 0.3s ease-in-out; /* Transición suave */
+  left: 10px; /* Espacio desde el borde izquierdo */
+  right: 10px; /* Espacio desde el borde derecho */
+  
+}
+
+.about-card:hover {
+  transform: translateY(-10px);
+}
+
+/* Textos */
+.about-card h3 {
+  color: #FF69B4;
+  font-size: 1.5rem;
+  text-align: center;
+}
+
+.about-card p {
+  font-size: 0.9rem;
+  color: #333;
+  text-align: justify;
+}
+.about-card ul {
+  text-align: justify;
+  list-style-type: none;
+  font-size: 0.9rem;
+  padding-left: 0.5rem;
+}
+.about-card ul li {
+    text-size-adjust: 0.9rem; /* Ajuste de tamaño de texto */
+    }
+
+.about-card-formas-pago ul li {
+  text-size-adjust: 0.9rem; /* Ajuste de tamaño de texto */
+  list-style-type: disc; /* Con viñetas */
+}
+
+/* Responsividad */
+@media (max-width: 768px) {
+  .about-cards {
+    flex-direction: column; /* Ajuste para móviles */
+    align-items: center;
+  }
+
+  .logo-image {
+    width: 120px; /* Reducción en pantallas pequeñas */
+  }
+}

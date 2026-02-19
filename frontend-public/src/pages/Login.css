@@ -1,0 +1,80 @@
+.login-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 80vh;
+  background: linear-gradient(135deg, #ffeef6, #fff8f2);
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.login-box {
+  background-color: #fff;
+  padding: 2rem 2.5rem;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+}
+
+.login-box h2 {
+  color: #b8336a;
+  margin-bottom: 1.5rem;
+}
+
+.login-box form {
+  display: flex;
+  flex-direction: column;
+}
+
+.login-box input {
+  padding: 0.8rem 1rem;
+  margin-bottom: 1rem;
+  border: 1px solid #e0b8ca;
+  border-radius: 8px;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+.login-box input:focus {
+  border-color: #d94f8c;
+}
+
+.login-box button {
+  padding: 0.8rem;
+  background-color: #d94f8c;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s;
+}
+
+.login-box button:hover {
+  background-color: #b8336a;
+}
+
+.error-message {
+  color: red;
+  margin-top: 0.5rem;
+  font-weight: bold;
+}
+
+.register-redirect {
+  margin-top: 1.5rem;
+  font-size: 0.9rem;
+  color: #5e3d45;
+}
+
+.register-redirect a {
+  color: #d94f8c;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.register-redirect a:hover {
+  text-decoration: underline;
+}

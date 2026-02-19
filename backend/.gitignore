@@ -1,0 +1,16 @@
+# Dependencias
+node_modules/
+
+# Variables privadas
+.env
+
+# Builds
+build/
+dist/
+
+# Credenciales
+client_secret_*.json
+client_secret_1035089522416-tj193045sdqe50kh0qmeos6f6ih8hmrk.apps.googleusercontent.com*.json
+# Archivos comprimidos
+*.zip
+*.zip

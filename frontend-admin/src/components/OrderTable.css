@@ -1,0 +1,37 @@
+.status {
+  font-weight: bold;
+  padding: 4px 8px;
+  border-radius: 5px;
+  text-transform: capitalize;
+}
+
+.status-pendiente {
+  background-color: #ffecb3;
+  color: #a67c00;
+}
+
+.status-vendido {
+  background-color: #c8e6c9;
+  color: #2e7d32;
+}
+
+.status-cancelado {
+  background-color: #ffcdd2;
+  color: #c62828;
+}
+.action-button {
+  margin-right: 5px;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 4px;
+  color: white;
+  cursor: pointer;
+}
+
+.action-vendido {
+  background-color: #4caf50;
+}
+
+.action-cancelado {
+  background-color: #f44336;
+}
