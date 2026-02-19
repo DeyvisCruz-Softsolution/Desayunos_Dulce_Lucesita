@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const API = axios.create({
-  baseURL: 'https://desayunos-dulce-lucesita.onrender.com', // Cambia si tu backend está en otro host/puerto
+  baseURL: 'https://desayunos-dulce-lucesita.onrender.com/api', // Cambia si tu backend está en otro host/puerto
 });
 
 // Agregar token a todas las peticiones si existe
