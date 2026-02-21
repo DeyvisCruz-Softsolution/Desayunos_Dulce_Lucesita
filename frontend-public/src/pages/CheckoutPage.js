@@ -73,19 +73,27 @@ const handleQuantityChange = async (itemId, newQuantity) => {
 };
 
 
-  const handleConfirmOrder = async () => {
-    try {
-      setLoading(true);
-      await createOrderFromCart({ descripcion: form.descripcion });
-      await clearCart();
-      setMessage('✅ Pedido confirmado. Se envió un correo con el resumen.');
-      setTimeout(() => navigate('/'), 3000);
-    } catch (error) {
-      setMessage('❌ Error al confirmar el pedido.');
-    } finally {
-      setLoading(false);
-    }
-  };
+const handleConfirmOrder = async () => {
+  console.log("🔥 BOTÓN CONFIRMAR PRESIONADO");
+  console.log("📦 Descripción enviada:", form.descripcion);
+  console.log("👤 Perfil:", profile);
+  console.log("🛒 Items carrito:", cartItems);
+
+  try {
+    setLoading(true);
+    await createOrderFromCart({ descripcion: form.descripcion });
+    console.log("✅ Llamado al backend ejecutado");
+
+    await clearCart();
+    setMessage('✅ Pedido confirmado. Se envió un correo con el resumen.');
+    setTimeout(() => navigate('/'), 3000);
+  } catch (error) {
+    console.error("❌ ERROR EN FRONTEND:", error);
+    setMessage('❌ Error al confirmar el pedido.');
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <div className="checkout-container">
