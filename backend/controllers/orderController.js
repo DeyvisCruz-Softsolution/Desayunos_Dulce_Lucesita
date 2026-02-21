@@ -146,8 +146,13 @@ const orderSummaryHTML = orderDetails
       html: htmlContent,
     };
 
-    await transporter.sendMail(mailOptionsToAdmin);
-    await transporter.sendMail(mailOptionsToClient);
+try {
+  await transporter.sendMail(mailOptionsToAdmin);
+  await transporter.sendMail(mailOptionsToClient);
+  console.log("✅ Correos enviados correctamente");
+} catch (mailError) {
+  console.error("❌ Error enviando correos:", mailError.message);
+}
 
     res.status(201).json({ message: 'Pedido creado y correos enviados.' });
   } catch (error) {
