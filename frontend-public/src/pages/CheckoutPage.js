@@ -114,7 +114,7 @@ ${form.descripcion}
 💰 *Total:* $${total.toFixed(2)}
 `;
 
-      const numero = "+57315341850"; // 🔴 CAMBIA POR TU NÚMERO REAL SIN +
+      const numero = "573153411850"; // 🔴 CAMBIA POR TU NÚMERO REAL SIN +
       const url = `https://wa.me/${numero}?text=${encodeURIComponent(mensaje)}`;
 
       // ✅ Limpiar carrito
