@@ -91,14 +91,19 @@ exports.createOrderFromCart = async (req, res) => {
     // Vaciar el carrito
     await CartItem.destroy({ where: { userId } });
 
-    // Enviar correo de confirmación
-    const transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASS,
-      },
-    });
+// 🔎 Verificar variables de entorno
+console.log("📧 SMTP_USER:", process.env.SMTP_USER);
+console.log("📧 SMTP_PASS existe:", process.env.SMTP_PASS ? "SI" : "NO");
+console.log("📧 SENDER_EMAIL:", process.env.SENDER_EMAIL);
+
+// Enviar correo de confirmación
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASS,
+  },
+});
 
 const orderSummaryHTML = orderDetails
   .map((item) => `
@@ -150,11 +155,16 @@ const orderSummaryHTML = orderDetails
     };
 
 try {
+  console.log("📨 Intentando enviar correo al ADMIN...");
   await transporter.sendMail(mailOptionsToAdmin);
+
+  console.log("📨 Intentando enviar correo al CLIENTE...");
   await transporter.sendMail(mailOptionsToClient);
+
   console.log("✅ Correos enviados correctamente");
 } catch (mailError) {
-  console.error("❌ Error enviando correos COMPLETO:", mailError);
+  console.error("❌ ERROR REAL DE NODEMAILER:");
+  console.error(mailError);
 }
 
     res.status(201).json({ message: 'Pedido creado y correos enviados.' });
