@@ -151,7 +151,7 @@ try {
   await transporter.sendMail(mailOptionsToClient);
   console.log("✅ Correos enviados correctamente");
 } catch (mailError) {
-  console.error("❌ Error enviando correos:", mailError.message);
+  console.error("❌ Error enviando correos COMPLETO:", mailError);
 }
 
     res.status(201).json({ message: 'Pedido creado y correos enviados.' });
