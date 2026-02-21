@@ -31,6 +31,9 @@ exports.createOrder = async (req, res) => {
 
 // Crear orden desde el carrito
 exports.createOrderFromCart = async (req, res) => {
+  console.log("🔥 createOrderFromCart EJECUTADO");
+  console.log("📦 Body recibido:", req.body);
+  console.log("👤 Usuario:", req.user);
   const { descripcion } = req.body;
   if (!descripcion) {
     return res.status(400).json({ error: 'Falta el campo descripcion' });
