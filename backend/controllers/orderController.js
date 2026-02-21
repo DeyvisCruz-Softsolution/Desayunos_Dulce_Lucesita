@@ -1,4 +1,34 @@
-const { Order, CartItem, Product } = require('../models');
+const { Order, CartItem, Product, User } = require('../models');
+
+// ===============================
+// Crear orden desde producto directo
+// ===============================
+exports.createOrder = async (req, res) => {
+  const { productId, quantity } = req.body;
+
+  if (!productId || !quantity) {
+    return res.status(400).json({ error: 'Faltan campos requeridos: productId o quantity' });
+  }
+
+  try {
+    const product = await Product.findByPk(productId);
+    if (!product) return res.status(404).json({ error: 'Producto no encontrado' });
+
+    const total = product.price * quantity;
+
+    const order = await Order.create({
+      userId: req.user.id,
+      productId,
+      quantity,
+      total,
+    });
+
+    res.status(201).json(order);
+  } catch (error) {
+    console.error('❌ Error al crear pedido directo:', error);
+    res.status(500).json({ error: 'Error al crear el pedido' });
+  }
+};
 
 // ===============================
 // Crear orden desde el carrito
@@ -15,7 +45,11 @@ exports.createOrderFromCart = async (req, res) => {
   try {
     const userId = req.user.id;
 
-    // Traer productos del carrito
+    const user = await User.findByPk(userId);
+    if (!user) {
+      return res.status(400).json({ error: 'Perfil de usuario incompleto.' });
+    }
+
     const cartItems = await CartItem.findAll({
       where: { userId },
       include: [Product],
@@ -31,7 +65,6 @@ exports.createOrderFromCart = async (req, res) => {
       const product = item.Product;
       const quantity = item.quantity;
 
-      // Validar stock
       if (product.stock < quantity) {
         return res.status(400).json({
           error: `Stock insuficiente para ${product.title}`
@@ -41,82 +74,88 @@ exports.createOrderFromCart = async (req, res) => {
       const subtotal = product.price * quantity;
       totalOrder += subtotal;
 
-      // Descontar stock
       await product.update({
         stock: product.stock - quantity
       });
 
-      // Crear registro de orden
       await Order.create({
         userId,
         productId: product.id,
         quantity,
         total: subtotal,
-        descripcion
       });
     }
 
     // Vaciar carrito
-    await CartItem.destroy({
-      where: { userId }
-    });
+    await CartItem.destroy({ where: { userId } });
 
-    console.log("✅ Pedido creado correctamente");
+    console.log("✅ Pedido creado correctamente (sin correo)");
 
-    return res.status(201).json({
-      message: 'Pedido creado correctamente',
+    res.status(201).json({
+      message: 'Pedido creado correctamente.',
       total: totalOrder
     });
 
   } catch (error) {
-    console.error('❌ Error al crear pedido:', error);
-    return res.status(500).json({
-      error: 'Error al crear pedido desde el carrito.'
-    });
+    console.error('❌ Error al crear pedido desde carrito:', error);
+    res.status(500).json({ error: 'Error al crear pedido desde el carrito.' });
   }
 };
 
-
 // ===============================
-// Obtener órdenes del usuario
+// Obtener pedidos del usuario
 // ===============================
-exports.getMyOrders = async (req, res) => {
+exports.getUserOrders = async (req, res) => {
   try {
-    const userId = req.user.id;
-
     const orders = await Order.findAll({
-      where: { userId },
+      where: { userId: req.user.id },
       include: [Product],
-      order: [['createdAt', 'DESC']]
+      order: [['createdAt', 'DESC']],
     });
 
-    return res.json(orders);
-
+    res.json(orders);
   } catch (error) {
-    console.error('❌ Error al obtener órdenes:', error);
-    return res.status(500).json({
-      error: 'Error al obtener órdenes'
-    });
+    res.status(500).json({ error: 'Error al obtener tus pedidos' });
   }
 };
 
-
 // ===============================
-// Obtener todas las órdenes (ADMIN)
+// Obtener todas las órdenes (admin)
 // ===============================
 exports.getAllOrders = async (req, res) => {
   try {
     const orders = await Order.findAll({
-      include: [Product],
-      order: [['createdAt', 'DESC']]
+      include: [Product, User],
+      order: [['createdAt', 'DESC']],
     });
 
-    return res.json(orders);
+    res.json(orders);
+  } catch (error) {
+    res.status(500).json({ error: 'Error al obtener todas las órdenes' });
+  }
+};
+
+// ===============================
+// Actualizar status de la orden
+// ===============================
+exports.updateOrderStatus = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
+
+    const order = await Order.findByPk(id);
+    if (!order) return res.status(404).json({ error: 'Orden no encontrada' });
+
+    order.status = status;
+    await order.save();
+
+    return res.status(200).json({
+      message: '✅ Estado actualizado correctamente',
+      order
+    });
 
   } catch (error) {
-    console.error('❌ Error al obtener todas las órdenes:', error);
-    return res.status(500).json({
-      error: 'Error al obtener órdenes'
-    });
+    console.error('❌ Error al actualizar estado:', error);
+    return res.status(500).json({ error: '❌ Error al actualizar estado' });
   }
 };
