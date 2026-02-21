@@ -3,7 +3,7 @@ import React from 'react';
 import '../components/styles/WhatsappButton.css';
 
 const WhatsappButton = () => {
-  const phone = '573202038908'; // Reemplaza por el número de tu empresa
+  const phone = '+573153411850'; // Reemplaza por el número de tu empresa
 
   return (
     <a
