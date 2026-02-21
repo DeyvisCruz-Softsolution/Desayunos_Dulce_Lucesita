@@ -121,7 +121,16 @@ ${form.descripcion}
       await clearCart();
 
       // ✅ Redirigir a WhatsApp
-      window.location.href = url;
+     // ✅ Abrir WhatsApp en nueva pestaña
+window.open(url, "_blank");
+
+// ✅ Cuando el usuario vuelva a la página, redirigir al inicio
+const handleFocus = () => {
+  window.removeEventListener("focus", handleFocus);
+  window.location.href = "/";
+};
+
+window.addEventListener("focus", handleFocus);
 
     } catch (error) {
       console.error("❌ ERROR EN FRONTEND:", error);
