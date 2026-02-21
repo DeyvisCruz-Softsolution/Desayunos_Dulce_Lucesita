@@ -1,10 +1,8 @@
 // src/pages/CheckoutPage.js
 import React, { useEffect, useState } from 'react';
 import { getCartItems, clearCart, updateCartItem, removeFromCart } from '../services/cartService';
-
 import { createOrderFromCart } from '../services/orderService';
 import { getUserProfile } from '../services/profileService';
-import { useNavigate } from 'react-router-dom';
 import './checkout.css';
 
 const CheckoutPage = () => {
@@ -13,8 +11,6 @@ const CheckoutPage = () => {
   const [message, setMessage] = useState('');
   const [profile, setProfile] = useState(null);
   const [removingItemId, setRemovingItemId] = useState(null);
-
-  const navigate = useNavigate();
 
   const [form, setForm] = useState({
     descripcion: '',
@@ -44,56 +40,96 @@ const CheckoutPage = () => {
     }
   };
 
-  const total = cartItems.reduce((acc, item) => acc + item.quantity * item.Product.price, 0);
+  const total = cartItems.reduce(
+    (acc, item) => acc + item.quantity * item.Product.price,
+    0
+  );
 
-  const isProfileComplete = profile?.name && profile?.phone && profile?.address && profile?.city;
+  const isProfileComplete =
+    profile?.name && profile?.phone && profile?.address && profile?.city;
+
   const isFormValid = form.descripcion;
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-const handleQuantityChange = async (itemId, newQuantity) => {
-  try {
-    if (newQuantity < 1) {
-      setRemovingItemId(itemId); // activa animación
-      setTimeout(async () => {
-        await removeFromCart(itemId);
-        setRemovingItemId(null);
+  const handleQuantityChange = async (itemId, newQuantity) => {
+    try {
+      if (newQuantity < 1) {
+        setRemovingItemId(itemId);
+        setTimeout(async () => {
+          await removeFromCart(itemId);
+          setRemovingItemId(null);
+          fetchCart();
+          setMessage('🗑️ Producto eliminado del carrito.');
+        }, 500);
+      } else {
+        await updateCartItem(itemId, newQuantity);
         fetchCart();
-        setMessage('🗑️ Producto eliminado del carrito.');
-      }, 500); // esperar a que se complete el fade-out
-    } else {
-      await updateCartItem(itemId, newQuantity);
-      fetchCart();
+      }
+    } catch (error) {
+      setMessage('❌ Error al actualizar cantidad.');
     }
-  } catch (error) {
-    setMessage('❌ Error al actualizar cantidad.');
-  }
-};
+  };
 
+  const handleConfirmOrder = async () => {
+    console.log("🔥 BOTÓN CONFIRMAR PRESIONADO");
 
-const handleConfirmOrder = async () => {
-  console.log("🔥 BOTÓN CONFIRMAR PRESIONADO");
-  console.log("📦 Descripción enviada:", form.descripcion);
-  console.log("👤 Perfil:", profile);
-  console.log("🛒 Items carrito:", cartItems);
+    try {
+      setLoading(true);
 
-  try {
-    setLoading(true);
-    await createOrderFromCart({ descripcion: form.descripcion });
-    console.log("✅ Llamado al backend ejecutado");
+      // ✅ Crear orden en backend
+      const orderResponse = await createOrderFromCart({
+        descripcion: form.descripcion
+      });
 
-    await clearCart();
-    setMessage('✅ Pedido confirmado. Se envió un correo con el resumen.');
-    setTimeout(() => navigate('/'), 3000);
-  } catch (error) {
-    console.error("❌ ERROR EN FRONTEND:", error);
-    setMessage('❌ Error al confirmar el pedido.');
-  } finally {
-    setLoading(false);
-  }
-};
+      console.log("✅ Backend respondió:", orderResponse);
+
+      // ✅ Construir resumen de productos
+      const productosTexto = cartItems
+        .map(
+          (item) =>
+            `• ${item.Product.title} x${item.quantity} - $${(
+              item.Product.price * item.quantity
+            ).toFixed(2)}`
+        )
+        .join("\n");
+
+      // ✅ Construir mensaje WhatsApp
+      const mensaje = `
+✨ *NUEVO PEDIDO* ✨
+
+👤 *Cliente:* ${profile?.name}
+📞 *Teléfono:* ${profile?.phone}
+🏙️ *Ciudad:* ${profile?.city}
+📍 *Dirección:* ${profile?.address}
+
+🛍️ *Productos:*
+${productosTexto}
+
+📝 *Notas del cliente:*
+${form.descripcion}
+
+💰 *Total:* $${total.toFixed(2)}
+`;
+
+      const numero = "57315341850"; // 🔴 CAMBIA POR TU NÚMERO REAL SIN +
+      const url = `https://wa.me/${numero}?text=${encodeURIComponent(mensaje)}`;
+
+      // ✅ Limpiar carrito
+      await clearCart();
+
+      // ✅ Redirigir a WhatsApp
+      window.location.href = url;
+
+    } catch (error) {
+      console.error("❌ ERROR EN FRONTEND:", error);
+      setMessage('❌ Error al confirmar el pedido.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="checkout-container">
@@ -101,7 +137,8 @@ const handleConfirmOrder = async () => {
 
       {!isProfileComplete && (
         <p className="error-message">
-          ⚠️ Tu perfil está incompleto. Por favor <a href="/profile">actualízalo</a> o <a href="/register">Regístrate</a> gratis antes de confirmar el pedido.
+          ⚠️ Tu perfil está incompleto. Por favor{" "}
+          <a href="/profile">actualízalo</a> antes de confirmar el pedido.
         </p>
       )}
 
@@ -110,21 +147,42 @@ const handleConfirmOrder = async () => {
       ) : (
         <>
           <ul className="checkout-items">
-            {cartItems.map(item => (
+            {cartItems.map((item) => (
               <li
-  key={item.id}
-  className={`checkout-item ${removingItemId === item.id ? 'fade-out' : ''}`}
->
-                <img src={item.Product.imageUrl} alt={item.Product.title} className="checkout-img" />
+                key={item.id}
+                className={`checkout-item ${
+                  removingItemId === item.id ? "fade-out" : ""
+                }`}
+              >
+                <img
+                  src={item.Product.imageUrl}
+                  alt={item.Product.title}
+                  className="checkout-img"
+                />
                 <div>
                   <h4>{item.Product.title}</h4>
                   <p><em>{item.Product.description}</em></p>
                   <p>Precio unitario: ${item.Product.price.toFixed(2)}</p>
-                  <p>Subtotal: ${(item.Product.price * item.quantity).toFixed(2)}</p>
+                  <p>
+                    Subtotal: $
+                    {(item.Product.price * item.quantity).toFixed(2)}
+                  </p>
                   <div className="quantity-controls">
-                    <button onClick={() => handleQuantityChange(item.id, item.quantity - 1)}>-</button>
+                    <button
+                      onClick={() =>
+                        handleQuantityChange(item.id, item.quantity - 1)
+                      }
+                    >
+                      -
+                    </button>
                     <span>{item.quantity}</span>
-                    <button onClick={() => handleQuantityChange(item.id, item.quantity + 1)}>+</button>
+                    <button
+                      onClick={() =>
+                        handleQuantityChange(item.id, item.quantity + 1)
+                      }
+                    >
+                      +
+                    </button>
                   </div>
                 </div>
               </li>
@@ -150,7 +208,7 @@ const handleConfirmOrder = async () => {
             onClick={handleConfirmOrder}
             disabled={!isFormValid || !isProfileComplete || loading}
           >
-            {loading ? 'Procesando...' : 'Confirmar pedido'}
+            {loading ? "Procesando..." : "Confirmar pedido"}
           </button>
         </>
       )}
