@@ -11,6 +11,7 @@ const CheckoutPage = () => {
   const [message, setMessage] = useState('');
   const [profile, setProfile] = useState(null);
   const [removingItemId, setRemovingItemId] = useState(null);
+  const [orderCompleted, setOrderCompleted] = useState(false);
 
   const [form, setForm] = useState({
     descripcion: '',
@@ -74,19 +75,13 @@ const CheckoutPage = () => {
   };
 
   const handleConfirmOrder = async () => {
-    console.log("🔥 BOTÓN CONFIRMAR PRESIONADO");
-
     try {
       setLoading(true);
 
-      // ✅ Crear orden en backend
-      const orderResponse = await createOrderFromCart({
+      await createOrderFromCart({
         descripcion: form.descripcion
       });
 
-      console.log("✅ Backend respondió:", orderResponse);
-
-      // ✅ Construir resumen de productos
       const productosTexto = cartItems
         .map(
           (item) =>
@@ -96,7 +91,6 @@ const CheckoutPage = () => {
         )
         .join("\n");
 
-      // ✅ Construir mensaje WhatsApp
       const mensaje = `
 ✨ *NUEVO PEDIDO* ✨
 
@@ -114,26 +108,22 @@ ${form.descripcion}
 💰 *Total:* $${total.toFixed(2)}
 `;
 
-      const numero = "573153411850"; // 🔴 CAMBIA POR TU NÚMERO REAL SIN +
+      const numero = "573153411850";
       const url = `https://wa.me/${numero}?text=${encodeURIComponent(mensaje)}`;
 
-      // ✅ Limpiar carrito
       await clearCart();
 
-      // ✅ Redirigir a WhatsApp
-     // ✅ Abrir WhatsApp en nueva pestaña
-window.open(url, "_blank");
+      window.open(url, "_blank");
 
-// ✅ Cuando el usuario vuelva a la página, redirigir al inicio
-const handleFocus = () => {
-  window.removeEventListener("focus", handleFocus);
-  window.location.href = "/";
-};
+      const handleFocus = () => {
+        window.removeEventListener("focus", handleFocus);
+        setOrderCompleted(true);
+      };
 
-window.addEventListener("focus", handleFocus);
+      window.addEventListener("focus", handleFocus);
 
     } catch (error) {
-      console.error("❌ ERROR EN FRONTEND:", error);
+      console.error(error);
       setMessage('❌ Error al confirmar el pedido.');
     } finally {
       setLoading(false);
@@ -142,83 +132,91 @@ window.addEventListener("focus", handleFocus);
 
   return (
     <div className="checkout-container">
-      <h2>🧾 Confirmar pedido</h2>
 
-      {!isProfileComplete && (
-        <p className="error-message">
-          ⚠️ Tu perfil está incompleto. Por favor{" "}
-          <a href="/profile">actualízalo</a> antes de confirmar el pedido.
-        </p>
-      )}
-
-      {cartItems.length === 0 ? (
-        <p>Tu carrito está vacío.</p>
-      ) : (
-        <>
-          <ul className="checkout-items">
-            {cartItems.map((item) => (
-              <li
-                key={item.id}
-                className={`checkout-item ${
-                  removingItemId === item.id ? "fade-out" : ""
-                }`}
-              >
-                <img
-                  src={item.Product.imageUrl}
-                  alt={item.Product.title}
-                  className="checkout-img"
-                />
-                <div>
-                  <h4>{item.Product.title}</h4>
-                  <p><em>{item.Product.description}</em></p>
-                  <p>Precio unitario: ${item.Product.price.toFixed(2)}</p>
-                  <p>
-                    Subtotal: $
-                    {(item.Product.price * item.quantity).toFixed(2)}
-                  </p>
-                  <div className="quantity-controls">
-                    <button
-                      onClick={() =>
-                        handleQuantityChange(item.id, item.quantity - 1)
-                      }
-                    >
-                      -
-                    </button>
-                    <span>{item.quantity}</span>
-                    <button
-                      onClick={() =>
-                        handleQuantityChange(item.id, item.quantity + 1)
-                      }
-                    >
-                      +
-                    </button>
-                  </div>
-                </div>
-              </li>
-            ))}
-          </ul>
-
-          <h3 className="total">Total: ${total.toFixed(2)}</h3>
-
-          <div className="checkout-form">
-            <h4>Datos de entrega</h4>
-            <textarea
-              name="descripcion"
-              placeholder="Dirección de envío, hora, mensaje si lleva tarjeta, etc."
-              value={form.descripcion}
-              onChange={handleChange}
-              rows={4}
-              required
-            ></textarea>
-          </div>
-
+      {orderCompleted ? (
+        <div className="order-success">
+          <h2>🎉 ¡Gracias por tu pedido!</h2>
+          <p>✅ Pedido registrado correctamente.</p>
+          <p>
+            En pocos minutos nos contactaremos contigo vía WhatsApp
+            para terminar de confirmar el pedido y los detalles de la compra.
+          </p>
           <button
             className="confirm-button"
-            onClick={handleConfirmOrder}
-            disabled={!isFormValid || !isProfileComplete || loading}
+            onClick={() => window.location.href = "/"}
           >
-            {loading ? "Procesando..." : "Confirmar pedido"}
+            Volver al inicio
           </button>
+        </div>
+      ) : (
+        <>
+          <h2>🧾 Confirmar pedido</h2>
+
+          {!isProfileComplete && (
+            <p className="error-message">
+              ⚠️ Tu perfil está incompleto. Por favor{" "}
+              <a href="/profile">actualízalo</a> antes de confirmar el pedido.
+            </p>
+          )}
+
+          {cartItems.length === 0 ? (
+            <p>Tu carrito está vacío.</p>
+          ) : (
+            <>
+              <ul className="checkout-items">
+                {cartItems.map((item) => (
+                  <li
+                    key={item.id}
+                    className={`checkout-item ${
+                      removingItemId === item.id ? "fade-out" : ""
+                    }`}
+                  >
+                    <img
+                      src={item.Product.imageUrl}
+                      alt={item.Product.title}
+                      className="checkout-img"
+                    />
+                    <div>
+                      <h4>{item.Product.title}</h4>
+                      <p><em>{item.Product.description}</em></p>
+                      <p>Precio unitario: ${item.Product.price.toFixed(2)}</p>
+                      <p>
+                        Subtotal: $
+                        {(item.Product.price * item.quantity).toFixed(2)}
+                      </p>
+                      <div className="quantity-controls">
+                        <button onClick={() => handleQuantityChange(item.id, item.quantity - 1)}>-</button>
+                        <span>{item.quantity}</span>
+                        <button onClick={() => handleQuantityChange(item.id, item.quantity + 1)}>+</button>
+                      </div>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+
+              <h3 className="total">Total: ${total.toFixed(2)}</h3>
+
+              <div className="checkout-form">
+                <h4>Datos de entrega</h4>
+                <textarea
+                  name="descripcion"
+                  placeholder="Dirección de envío, hora, mensaje si lleva tarjeta, etc."
+                  value={form.descripcion}
+                  onChange={handleChange}
+                  rows={4}
+                  required
+                ></textarea>
+              </div>
+
+              <button
+                className="confirm-button"
+                onClick={handleConfirmOrder}
+                disabled={!isFormValid || !isProfileComplete || loading}
+              >
+                {loading ? "Procesando..." : "Confirmar pedido"}
+              </button>
+            </>
+          )}
         </>
       )}
 
