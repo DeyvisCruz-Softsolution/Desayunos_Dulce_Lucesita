@@ -30,7 +30,7 @@ app.use(morgan('dev'));
 connectDB()
   .then(() => {
     initModels();
-    return require('./config/database').sequelize.sync({ alter: true });
+   return require('./config/database').sequelize.sync();
   })
   .then(() => {
     console.log("📦 Tablas sincronizadas correctamente");
