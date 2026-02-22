@@ -27,11 +27,11 @@ const ContactForm = () => {
 
       // 2️⃣ Enviar correo con EmailJS
       const emailParams = {
-        from_name: form.name,
-        from_email: form.email,
-        subject: form.subject,
-        message: form.message,
-      };
+  name: form.name,
+  email: form.email,
+  title: form.subject,
+  message: form.message,
+};
 
       await emailjs.send(
         process.env.REACT_APP_EMAILJS_SERVICE_ID,
