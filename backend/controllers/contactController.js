@@ -1,25 +1,9 @@
 require('dotenv').config();
 const axios = require('axios');
-const nodemailer = require('nodemailer');
+const sgMail = require('@sendgrid/mail');
 
-// --- Transporter SendGrid ---
-const transporter = nodemailer.createTransport({
-  host: 'smtp.sendgrid.net',
-  port: 587,
-  auth: {
-    user: 'apikey', // siempre "apikey"
-    pass: process.env.SENDGRID_API_KEY
-  }
-});
-
-// Verifica conexión con el SMTP al iniciar
-transporter.verify((error, success) => {
-  if (error) {
-    console.error('❌ Error con el transporter:', error);
-  } else {
-    console.log('✅ Transporter listo para enviar correos');
-  }
-});
+// Configura la API Key
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 exports.sendContactEmail = async (req, res) => {
   console.log('📥 Petición recibida en /api/contact');
@@ -27,10 +11,10 @@ exports.sendContactEmail = async (req, res) => {
   const { name, email, subject, message, token } = req.body;
 
   if (!name || !email || !subject || !message || !token) {
-    console.warn('⚠️ Faltan campos o token reCAPTCHA');
     return res.status(400).json({ error: 'Todos los campos y reCAPTCHA son requeridos.' });
   }
 
+  // Verificación reCAPTCHA
   try {
     const response = await axios.post(
       'https://www.google.com/recaptcha/api/siteverify',
@@ -44,7 +28,6 @@ exports.sendContactEmail = async (req, res) => {
     );
     console.log('📡 Google verify response:', response.data);
     if (!response.data.success) {
-      console.error('❌ reCAPTCHA fallido:', response.data['error-codes']);
       return res.status(400).json({ error: 'reCAPTCHA fallido' });
     }
   } catch (err) {
@@ -52,17 +35,20 @@ exports.sendContactEmail = async (req, res) => {
     return res.status(500).json({ error: 'Error en verificación de reCAPTCHA' });
   }
 
+  // Envío con SendGrid API
+  const msg = {
+    to: process.env.SENDER_EMAIL,
+    from: process.env.SENDER_EMAIL,
+    subject: `Contacto desde web: ${subject}`,
+    text: `Nombre: ${name}\nEmail: ${email}\nMensaje:\n${message}`,
+  };
+
   try {
-    const mailOptions = {
-      from: process.env.SENDER_EMAIL,
-      to: process.env.SENDER_EMAIL,
-      subject: `Contacto desde web: ${subject}`,
-      text: `Nombre: ${name}\nEmail: ${email}\nMensaje:\n${message}`,
-    };
-      await transporter.sendMail(mailOptions);
+    await sgMail.send(msg);
+    console.log('📤 Email enviado correctamente con SendGrid API');
     return res.status(200).json({ message: 'Email enviado correctamente.' });
   } catch (err) {
-    console.error('❌ Error al enviar correo con SendGrid:', err);
+    console.error('❌ Error enviando correo con SendGrid API:', err);
     return res.status(500).json({ error: 'Error enviando correo.' });
   }
 };
