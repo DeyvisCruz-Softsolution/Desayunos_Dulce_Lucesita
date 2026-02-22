@@ -2,14 +2,14 @@ require('dotenv').config();
 const axios = require('axios');
 const nodemailer = require('nodemailer');
 
+// --- Transporter SendGrid ---
 const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST,
-  port: +process.env.SMTP_PORT,
-  secure: false,
+  host: 'smtp.sendgrid.net',
+  port: 587,
   auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASS,
-  },
+    user: 'apikey', // siempre "apikey"
+    pass: process.env.SENDGRID_API_KEY
+  }
 });
 
 // Verifica conexión con el SMTP al iniciar
@@ -59,11 +59,10 @@ exports.sendContactEmail = async (req, res) => {
       subject: `Contacto desde web: ${subject}`,
       text: `Nombre: ${name}\nEmail: ${email}\nMensaje:\n${message}`,
     };
-    await transporter.sendMail(mailOptions);
-    console.log('📤 Email enviado con éxito:', mailOptions);
+      await transporter.sendMail(mailOptions);
     return res.status(200).json({ message: 'Email enviado correctamente.' });
   } catch (err) {
-    console.error('❌ Error al enviar correo:', err);
+    console.error('❌ Error al enviar correo con SendGrid:', err);
     return res.status(500).json({ error: 'Error enviando correo.' });
   }
 };
