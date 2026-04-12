@@ -23,7 +23,7 @@ Product.hasMany(CartItem, { foreignKey: 'productId', onDelete: 'CASCADE' });
 CartItem.belongsTo(Product, { foreignKey: 'productId' });
 
 const initModels = async () => {
-  await sequelize.sync({ alter: false });
+  await sequelize.sync({ alter: true });
  // usar { force: true } solo en desarrollo si necesitas resetear
   console.log('🧩 Modelos sincronizados con la base de datos');
 };

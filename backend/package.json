@@ -25,6 +25,8 @@
     "multer": "^2.0.0",
     "mysql2": "^3.14.1",
     "nodemailer": "^7.0.13",
+    "pg": "^8.20.0",
+    "pg-hstore": "^2.3.4",
     "react-google-recaptcha": "^3.1.0",
     "sequelize": "^6.37.7"
   },

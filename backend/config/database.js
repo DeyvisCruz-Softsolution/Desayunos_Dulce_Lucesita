@@ -1,6 +1,5 @@
 const { Sequelize } = require('sequelize');
 
-
 const sequelize = new Sequelize(
   process.env.DB_NAME,
   process.env.DB_USER,
@@ -8,17 +7,29 @@ const sequelize = new Sequelize(
   {
     host: process.env.DB_HOST,
     port: process.env.DB_PORT,
-    dialect: 'mysql',
+    dialect: 'postgres',
     logging: false,
+    dialectOptions: {
+      ssl: {
+        require: true,
+        rejectUnauthorized: false
+      }
+    },
+    pool: {
+      max: 5,
+      min: 0,
+      acquire: 30000,
+      idle: 10000
+    }
   }
 );
 
 const connectDB = async () => {
   try {
     await sequelize.authenticate();
-    console.log('✅ Conexión a la base de datos establecida.');
+    console.log('✅ Conectado a Supabase');
   } catch (error) {
-    console.error('❌ Error al conectar con la base de datos:\n', error.message);
+    console.error('❌ Error de conexión:', error.message);
     process.exit(1);
   }
 };
