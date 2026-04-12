@@ -23,7 +23,7 @@ exports.getDashboardStats = async (req, res) => {
         groupFormat = 'YYYY-MM-DD';
         break;
       case 'week':
-        groupFormat = 'IYYY-IW'; // ISO week
+        groupFormat = 'IYYY-IW';
         break;
       case 'month':
         groupFormat = 'YYYY-MM';
@@ -58,7 +58,7 @@ exports.getDashboardStats = async (req, res) => {
       group: ['status']
     });
 
-    // 🏆 Productos más vendidos
+    // 🏆 Productos más vendidos (CORREGIDO)
     const topProducts = await Order.findAll({
       attributes: [
         'productId',
@@ -67,32 +67,42 @@ exports.getDashboardStats = async (req, res) => {
       include: [
         {
           model: Product,
-          attributes: ['title', 'imageUrl']
+          attributes: ['id', 'title', 'imageUrl']
         }
       ],
-      group: ['productId', 'Product.id'],
-      order: [[Sequelize.literal('totalSold'), 'DESC']],
+      group: [
+        'productId',
+        'Product.id',
+        'Product.title',
+        'Product.imageUrl'
+      ],
+      order: [[Sequelize.fn('SUM', Sequelize.col('quantity')), 'DESC']],
       limit: 5
     });
 
-    // 👤 Clientes más activos
+    // 👤 Clientes más activos (CORREGIDO)
     const topClients = await Order.findAll({
       attributes: [
         'userId',
-        [Sequelize.fn('COUNT', Sequelize.col('Order.id')), 'ordersCount']
+        [Sequelize.fn('COUNT', Sequelize.col('id')), 'ordersCount']
       ],
       include: [
         {
           model: User,
-          attributes: ['name', 'email']
+          attributes: ['id', 'name', 'email']
         }
       ],
-      group: ['userId', 'User.id'],
-      order: [[Sequelize.literal('ordersCount'), 'DESC']],
+      group: [
+        'userId',
+        'User.id',
+        'User.name',
+        'User.email'
+      ],
+      order: [[Sequelize.fn('COUNT', Sequelize.col('id')), 'DESC']],
       limit: 5
     });
 
-    // 📈 Ventas por periodo (CORREGIDO PARA POSTGRESQL)
+    // 📈 Ventas por periodo
     const salesByPeriod = await Order.findAll({
       where,
       attributes: [
@@ -122,7 +132,7 @@ exports.getDashboardStats = async (req, res) => {
     console.error('Error dashboard:', error);
     res.status(500).json({
       message: 'Error al obtener datos del dashboard',
-      error: error.message // 🔥 esto te ayuda a depurar en producción
+      error: error.message
     });
   }
 };
