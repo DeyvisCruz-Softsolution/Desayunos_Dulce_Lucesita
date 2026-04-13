@@ -11,9 +11,10 @@ import Sidebar from './components/Sidebar';
 import Navbar from './components/Navbar';
 import PrivateRoute from './PrivateRoute';
 import AdminPromotionsPage from './pages/AdminPromotionsPage';
-import DashboardPage from './pages/DashboardPage';
 
-
+// 🔥 DASHBOARDS
+import DashboardPage from './pages/DashboardPage'; // viejo (respaldo)
+import DashboardV2 from './pages/DashboardV2';     // nuevo (principal)
 
 const App = () => {
   return (
@@ -21,16 +22,31 @@ const App = () => {
       <Sidebar />
       <div className="admin-main">
         <Navbar />
+
         <main style={{ padding: '20px' }}>
           <Routes>
+
+            {/* 🔥 DASHBOARD NUEVO (PRINCIPAL) */}
             <Route
               path="/"
-             element={
-               <PrivateRoute roles={['admin']}>
-                 <DashboardPage />
-               </PrivateRoute>
-             }
+              element={
+                <PrivateRoute roles={['admin']}>
+                  <DashboardV2 />
+                </PrivateRoute>
+              }
             />
+
+            {/* 🧠 DASHBOARD ANTIGUO (OPCIONAL / RESPALDO) */}
+            <Route
+              path="/dashboard-old"
+              element={
+                <PrivateRoute roles={['admin']}>
+                  <DashboardPage />
+                </PrivateRoute>
+              }
+            />
+
+            {/* PRODUCTOS */}
             <Route
               path="/products"
               element={
@@ -39,6 +55,7 @@ const App = () => {
                 </PrivateRoute>
               }
             />
+
             <Route
               path="/products/add"
               element={
@@ -47,6 +64,7 @@ const App = () => {
                 </PrivateRoute>
               }
             />
+
             <Route
               path="/products/edit/:id"
               element={
@@ -55,6 +73,8 @@ const App = () => {
                 </PrivateRoute>
               }
             />
+
+            {/* PEDIDOS */}
             <Route
               path="/orders"
               element={
@@ -63,6 +83,8 @@ const App = () => {
                 </PrivateRoute>
               }
             />
+
+            {/* USUARIOS */}
             <Route
               path="/users"
               element={
@@ -71,7 +93,8 @@ const App = () => {
                 </PrivateRoute>
               }
             />
-            <Route path="/login" element={<Login />} />
+
+            {/* PROMOCIONES */}
             <Route
               path="/promotions"
               element={
@@ -80,6 +103,10 @@ const App = () => {
                 </PrivateRoute>
               }
             />
+
+            {/* LOGIN */}
+            <Route path="/login" element={<Login />} />
+
           </Routes>
         </main>
       </div>
