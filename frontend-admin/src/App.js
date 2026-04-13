@@ -12,21 +12,24 @@ import Navbar from './components/Navbar';
 import PrivateRoute from './PrivateRoute';
 import AdminPromotionsPage from './pages/AdminPromotionsPage';
 
-// 🔥 DASHBOARDS
-import DashboardPage from './pages/DashboardPage'; // viejo (respaldo)
-import DashboardV2 from './pages/DashboardV2';     // nuevo (principal)
+import DashboardPage from './pages/DashboardPage';
+import DashboardV2 from './pages/DashboardV2';
 
 const App = () => {
   return (
-    <div className="admin-container">
+    <div style={{ display: 'flex' }}>
+
+      {/* SIDEBAR */}
       <Sidebar />
-      <div className="admin-main">
+
+      {/* CONTENIDO */}
+      <div className="main-content">
+
         <Navbar />
 
-        <main style={{ padding: '20px' }}>
+        <main className="main-inner">
           <Routes>
 
-            {/* 🔥 DASHBOARD NUEVO (PRINCIPAL) */}
             <Route
               path="/"
               element={
@@ -36,7 +39,6 @@ const App = () => {
               }
             />
 
-            {/* 🧠 DASHBOARD ANTIGUO (OPCIONAL / RESPALDO) */}
             <Route
               path="/dashboard-old"
               element={
@@ -46,7 +48,6 @@ const App = () => {
               }
             />
 
-            {/* PRODUCTOS */}
             <Route
               path="/products"
               element={
@@ -74,7 +75,6 @@ const App = () => {
               }
             />
 
-            {/* PEDIDOS */}
             <Route
               path="/orders"
               element={
@@ -84,7 +84,6 @@ const App = () => {
               }
             />
 
-            {/* USUARIOS */}
             <Route
               path="/users"
               element={
@@ -94,7 +93,6 @@ const App = () => {
               }
             />
 
-            {/* PROMOCIONES */}
             <Route
               path="/promotions"
               element={
@@ -104,7 +102,6 @@ const App = () => {
               }
             />
 
-            {/* LOGIN */}
             <Route path="/login" element={<Login />} />
 
           </Routes>

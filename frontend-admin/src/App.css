@@ -1,38 +1,100 @@
-.App {
-  text-align: center;
+/* ===== RESET ===== */
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto';
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+/* ===== SIDEBAR ===== */
+.sidebar {
+  width: 220px;
+  background: #111827;
+  color: #fff;
+  height: 100vh;
+  padding: 20px;
+  position: fixed;
+  left: 0;
+  top: 0;
+  transition: all 0.3s ease;
+  z-index: 1500;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
+/* ===== CONTENIDO ===== */
+.main-content {
+  margin-left: 220px;
+  width: 100%;
   min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  background: #f4f6f9;
+  transition: all 0.3s ease;
 }
 
-.App-link {
-  color: #61dafb;
+/* ===== BOTÓN MOBILE ===== */
+.mobile-menu-btn {
+  position: fixed;
+  top: 15px;
+  left: 15px;
+  z-index: 2000;
+  background: #111827;
+  color: #fff;
+  border: none;
+  padding: 10px;
+  border-radius: 8px;
+  display: none;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+/* ===== OVERLAY PRO ===== */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.4);
+  z-index: 1400;
+}
+
+/* ===== MOBILE ===== */
+@media (max-width: 768px) {
+
+  .mobile-menu-btn {
+    display: block;
   }
-  to {
-    transform: rotate(360deg);
+
+  .sidebar {
+    left: -220px;
   }
+
+  .sidebar.open {
+    left: 0;
+  }
+
+  .main-content {
+    margin-left: 0;
+  }
+}
+/* CONTENEDOR INTERNO */
+.main-inner {
+  padding: 20px;
+  width: 100%;
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
+
+/* EVITA QUE TABLAS O CONTENIDO SE SALGAN */
+.main-inner * {
+  max-width: 100%;
+}
+
+/* TABLAS RESPONSIVE */
+table {
+  width: 100%;
+  display: block;
+  overflow-x: auto;
+}
+
+/* CONTENEDORES GRANDES */
+.container, 
+.page-container {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
 }

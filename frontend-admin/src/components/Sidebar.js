@@ -1,17 +1,60 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 
 const Sidebar = () => {
+  const location = useLocation();
+  const [open, setOpen] = useState(false);
+
+  const menu = [
+    { name: 'Dashboard', path: '/', icon: '📊' },
+    { name: 'Productos', path: '/products', icon: '📦' },
+    { name: 'Pedidos', path: '/orders', icon: '🧾' },
+    { name: 'Usuarios', path: '/users', icon: '👤' },
+    { name: 'Promociones', path: '/promotions', icon: '🎁' }
+  ];
+
   return (
-    <aside className="sidebar">
-      <ul>
-        <li><Link to="/">Dashboard</Link></li>
-        <li><Link to="/products">Productos</Link></li>
-        <li><Link to="/orders">Pedidos</Link></li>
-        <li><Link to="/users">Usuarios</Link></li>
-        <li><Link to="/promotions">🎁 Promociones</Link></li>
-      </ul>
-    </aside>
+    <>
+      {/* BOTÓN MOBILE */}
+      <button
+        onClick={() => setOpen(!open)}
+        className="mobile-menu-btn"
+      >
+        ☰
+      </button>
+
+      {/* OVERLAY (modo pro) */}
+      {open && <div className="overlay" onClick={() => setOpen(false)} />}
+
+      <aside className={`sidebar ${open ? 'open' : ''}`}>
+        <h2 style={{ marginBottom: '30px' }}>🚀 Lucesita</h2>
+
+        <nav>
+          {menu.map((item, index) => (
+            <Link
+              key={index}
+              to={item.path}
+              onClick={() => setOpen(false)}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '10px',
+                padding: '12px',
+                borderRadius: '10px',
+                marginBottom: '10px',
+                textDecoration: 'none',
+                color: location.pathname === item.path ? '#111827' : '#fff',
+                background: location.pathname === item.path ? '#fff' : 'transparent',
+                fontWeight: '500'
+              }}
+            >
+              <span>{item.icon}</span>
+              {item.name}
+            </Link>
+          ))}
+        </nav>
+      </aside>
+    </>
   );
 };
 

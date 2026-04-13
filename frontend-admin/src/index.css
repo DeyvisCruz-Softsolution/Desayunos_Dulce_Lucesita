@@ -1,13 +1,104 @@
+/* ===== RESET ===== */
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto';
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+/* ===== SIDEBAR ===== */
+.sidebar {
+  width: 195px; /* Ancho fijo para el sidebar */
+  background: #111827;
+  color: #fff;
+  height: 100vh;
+  padding: 20px;
+  position: fixed;
+  left: 0;
+  top: 0;
+  transition: all 0.3s ease;
+  z-index: 1500;
+}
+
+/* ===== CONTENIDO ===== */
+.main-content {
+  margin-left: 220px;
+  width: 100%;
+  min-height: 100vh;
+  background: #f4f6f9;
+  transition: all 0.3s ease;
+}
+
+/* ===== BOTÓN MOBILE ===== */
+.mobile-menu-btn {
+  position: fixed;
+  top: 15px;
+  left: 15px;
+  z-index: 2000;
+  background: #111827;
+  color: #fff;
+  border: none;
+  padding: 10px;
+  border-radius: 8px;
+  display: none;
+}
+
+/* ===== OVERLAY PRO ===== */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.4);
+  z-index: 1400;
+}
+
+/* ===== MOBILE ===== */
+@media (max-width: 768px) {
+
+  .mobile-menu-btn {
+    display: block;
+  }
+
+  .sidebar {
+    left: -220px;
+  }
+
+  .sidebar.open {
+    left: 0;
+  }
+
+  .main-content {
+    margin-left: 0;
+  }
+}
+/* CONTENEDOR INTERNO */
+.main-inner {
+  padding: 20px;
+  width: 100%;
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
+
+/* EVITA QUE TABLAS O CONTENIDO SE SALGAN */
+/* SOLO LIMITAMOS CONTENIDO NORMAL, NO GRÁFICOS */
+.main-inner img,
+.main-inner table,
+.main-inner input,
+.main-inner textarea {
+  max-width: 100%;
+}
+
+/* TABLAS RESPONSIVE */
+table {
+  width: 100%;
+  display: block;
+  overflow-x: auto;
+}
+
+/* CONTENEDORES GRANDES */
+.container, 
+.page-container {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
 }
