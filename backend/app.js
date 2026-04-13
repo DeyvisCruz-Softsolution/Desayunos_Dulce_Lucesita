@@ -9,6 +9,7 @@ const contactRoutes = require('./routes/contactRoutes'); // ✅ Importa las ruta
 const cartRoutes = require('./routes/cartRoutes'); // ✅ Importa las rutas de carrito
 const promotionRoutes = require('./routes/promotionRoutes');
 const dashboardRoutes = require('./routes/dashboardRoutes');
+const dashboardV2Routes = require('./routes/dashboardV2Routes');
 
 dotenv.config();
 
@@ -48,6 +49,7 @@ app.use('/api/users', require('./routes/userRoutes'));
 app.use('/api/cart', require('./routes/cartRoutes'));
 app.use('/api/promotions', require('./routes/promotionRoutes'));
 app.use('/api/dashboard', require('./routes/dashboardRoutes')); // ✅ Usa las rutas de dashboard (dashboardRoutes);
+app.use('/api/dashboard-v2', dashboardV2Routes);
 app.get('/', (req, res) => res.send('🚀 API de Dulce Lucesita lista'));
 
 module.exports = app;
