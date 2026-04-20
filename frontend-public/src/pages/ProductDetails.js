@@ -1,19 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import API from '../services/api';
+import { fetchProductById } from '../services/productService';
 
 const ProductDetails = () => {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
 
   useEffect(() => {
-    API.get(`/products`)
-      .then(res => {
-        const found = res.data.find(p => p.id === parseInt(id));
-        if (found) setProduct(found);
-      })
-      .catch(err => console.error('Error al obtener el producto', err));
-  }, [id]);
+  const fetchProduct = async () => {
+    try {
+      const data = await fetchProductById(id);
+      setProduct(data);
+    } catch (err) {
+      console.error('Error al obtener el producto', err);
+    }
+  };
+
+  fetchProduct();
+}, [id]);
 
   if (!product) return <p>Cargando producto...</p>;
 

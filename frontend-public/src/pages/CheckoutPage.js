@@ -1,7 +1,6 @@
 // src/pages/CheckoutPage.js
 import React, { useEffect, useState } from 'react';
-import { getCartItems, clearCart, updateCartItem, removeFromCart } from '../services/cartService';
-import { createOrderFromCart } from '../services/orderService';
+import { getCart, clearCart, updateCartItem, removeFromCart } from '../services/cartService';import { createOrderFromCart } from '../services/orderService';
 import { getUserProfile } from '../services/profileService';
 import './checkout.css';
 
@@ -24,7 +23,7 @@ const CheckoutPage = () => {
 
   const fetchCart = async () => {
     try {
-      const items = await getCartItems();
+      const items = await getCart();
       setCartItems(items);
     } catch (err) {
       setMessage('Error al cargar el carrito.');

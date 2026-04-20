@@ -1,19 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { logout } from '../services/authService';
+import { Link } from 'react-router-dom';
 import './styles/header.css';
 import { ShoppingCart, Menu, X } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 
 const Header = () => {
-  const navigate = useNavigate();
-  const user = JSON.parse(localStorage.getItem('user'));
+  const { user, logout } = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
   const navRef = useRef();
-
-  const handleLogout = () => {
-    logout();
-    navigate('/login');
-  };
 
   const toggleMenu = () => setMenuOpen(!menuOpen);
 
@@ -28,9 +22,16 @@ const Header = () => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [menuOpen]);
 
+  const handleLogout = () => {
+    toggleMenu();
+    logout(); // 🔥 AuthContext ya maneja redirección
+  };
+
   return (
     <header>
       <div className="header-container">
+        
+        {/* LOGO */}
         <div className="brand">
           <Link to="/" className="logo-link">
             <img src="/logo.ico" alt="Logo Dulce Lucesita" className="logo-icon" />
@@ -38,23 +39,31 @@ const Header = () => {
           </Link>
         </div>
 
+        {/* BOTÓN MENÚ MÓVIL */}
         <button className="menu-toggle" onClick={toggleMenu}>
           {menuOpen ? <X size={26} /> : <Menu size={26} />}
         </button>
 
+        {/* NAV */}
         <nav className={menuOpen ? 'open' : ''} ref={navRef}>
           <Link to="/" onClick={toggleMenu}>Inicio</Link>
           <Link to="/shop" onClick={toggleMenu}>Tienda</Link>
           <Link to="/about" onClick={toggleMenu}>Nosotros</Link>
           <Link to="/contact" onClick={toggleMenu}>Contacto</Link>
+
           <Link to="/checkout" onClick={toggleMenu} className="nav-cart-link">
             <ShoppingCart size={22} />
             <span>Carrito</span>
           </Link>
-          <Link to="/profile" onClick={toggleMenu}>Mi perfil</Link>
+
+          {user && (
+            <Link to="/profile" onClick={toggleMenu}>Mi perfil</Link>
+          )}
+
+          {/* ADMIN */}
           {user?.role === 'admin' && (
             <a
-              href="http://localhost:3000/admin"
+              href={process.env.REACT_APP_ADMIN_URL || 'https://tu-admin.vercel.app'}
               className="admin-button"
               target="_blank"
               rel="noopener noreferrer"
@@ -63,14 +72,17 @@ const Header = () => {
             </a>
           )}
 
+          {/* AUTH */}
           {!user ? (
             <>
               <Link to="/login" onClick={toggleMenu}>Login</Link>
               <Link to="/register" onClick={toggleMenu}>Registro</Link>
-              
             </>
           ) : (
-            <button onClick={() => { handleLogout(); toggleMenu(); }}>Cerrar sesión</button>
+            <>
+              <span className="user-name">👤 {user.name}</span>
+              <button onClick={handleLogout}>Cerrar sesión</button>
+            </>
           )}
         </nav>
       </div>

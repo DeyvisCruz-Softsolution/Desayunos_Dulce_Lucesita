@@ -10,33 +10,60 @@ import Register from './pages/Register';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import CheckoutPage from './pages/CheckoutPage';
-import WhatsappButton from './components/WhatsappButton';
+import WhatsAppButton from './components/WhatsAppButton';
 import ProfilePage from './pages/ProfilePage';
 import OrderHistoryPage from './pages/OrderHistoryPage';
 import PromotionPopup from './components/PromotionPopup';
+import PrivateRoute from './route/PrivateRoute'; // ✅ IMPORTANTE
 
 const App = () => {
   return (
     <>
-     <PromotionPopup />
+      <PromotionPopup />
       <Header />
-      <WhatsappButton />
-     
+      <WhatsAppButton />
+
       <main style={{ padding: '20px' }}>
         <Routes>
+          {/* Públicas */}
           <Route path="/" element={<Home />} />
           <Route path="/shop" element={<Shop />} />
           <Route path="/product/:id" element={<ProductDetails />} />
           <Route path="/about" element={<AboutUs />} />
-          <Route path="/contact" element={<Contact />} /> 
+          <Route path="/contact" element={<Contact />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/checkout" element={<CheckoutPage />} />
-          <Route path="/profile" element={<ProfilePage />} />
-          <Route path="/order-history" element={<OrderHistoryPage />} />
+
+          {/* 🔐 Protegidas */}
+          <Route
+            path="/checkout"
+            element={
+              <PrivateRoute>
+                <CheckoutPage />
+              </PrivateRoute>
+            }
+          />
+
+          <Route
+            path="/profile"
+            element={
+              <PrivateRoute>
+                <ProfilePage />
+              </PrivateRoute>
+            }
+          />
+
+          <Route
+            path="/order-history"
+            element={
+              <PrivateRoute>
+                <OrderHistoryPage />
+              </PrivateRoute>
+            }
+          />
         </Routes>
-       
       </main>
+
       <Footer />
     </>
   );

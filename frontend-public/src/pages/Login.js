@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { login } from '../services/authService';
 import '../pages/Login.css'; // Asegúrate de tener este archivo
+import { useAuth } from '../context/AuthContext';
 
 const Login = () => {
+  const { login } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -17,8 +18,8 @@ const Login = () => {
       await login(email, password);
       navigate('/');
     } catch (err) {
-      setError('❌ Credenciales inválidas. Intenta nuevamente.');
-    }
+  setError(err.message || '❌ Error al iniciar sesión');
+}
   };
 
   return (
